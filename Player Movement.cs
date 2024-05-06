@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D coll;
     public GameObject camera;
     public CameraFollow s2;
-  
-
+    public bool IsUnGrounded;
+    public float jump;
     [SerializeField] private LayerMask jumpableGround;
     // Start is called before the first frame update
     private void Start()
@@ -38,14 +38,26 @@ public class PlayerMovement : MonoBehaviour
         float dirX = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirX * 7f, rb.velocity.y);
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (Input.GetButtonDown("Jump") && !IsUnGrounded)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(rb.velocity.x,14f);
+            rb.AddForce(new Vector2(rb.velocity.x, jump));
         }   
     }
-    private bool IsGrounded()
-    {
-        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, 0.1f, jumpableGround);
+    private void OnCollisionEnter2D(Collision2D other){
+if (other.gameObject.CompareTag("Ground")){
+    IsUnGrounded = false;
+}
     }
-    
+    private void OnCollisionStay2D(Collision2D other){
+        
+if (other.gameObject.CompareTag("Ground")){
+    IsUnGrounded = false;
+}
+    }
+    private void OnCollisionExit2D(Collision2D other){
+
+if (other.gameObject.CompareTag("Ground")){
+    IsUnGrounded = true;
+}
+    }
 }
