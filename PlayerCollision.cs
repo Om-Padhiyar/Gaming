@@ -20,7 +20,14 @@ public PlayerHearts ph;
     } 
            
         
-       
+       IEnumerator GetHurt(){
+        Physics2D.IgnoreLayerCollision(7,8);
+        GetComponent<Animator>().SetLayerWeight(1, 1);
+        yield return new WaitForSeconds(3);
+        GetComponent<Animator>().SetLayerWeight(1, 0);
+        Physics2D.IgnoreLayerCollision(7,8, false);
+    }
+
         
     
 
@@ -38,19 +45,21 @@ public PlayerHearts ph;
             else{
                 StartCoroutine(GetHurt());
             }
+        }
+            if (collision.gameObject.CompareTag("losetwo")){
+           ph.health = ph.health-2;
+
+
+           if(ph.health <=0)  {
+                        Die(); 
+  
+            }
+            
+            else{
+                StartCoroutine(GetHurt());
+            }
 
            }
         
    }
-
-
-
-   
-    IEnumerator GetHurt(){
-        Physics2D.IgnoreLayerCollision(7,8);
-        GetComponent<Animator>().SetLayerWeight(1, 1);
-        yield return new WaitForSeconds(3);
-        GetComponent<Animator>().SetLayerWeight(1, 0);
-        Physics2D.IgnoreLayerCollision(7,8, false);
-    }
 }
